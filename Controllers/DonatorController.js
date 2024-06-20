@@ -32,3 +32,25 @@ module.exports.DonatorsDeets = async(req,res,next)=>{
         next(ex);
     }
 }
+
+module.exports.SearchedDon = async(req,res,next)=>{
+    try{
+        const firstname = req.params.firstname;
+        if(firstname.length === 0){
+            const donator = await Donator.find();
+            return res.status(201).json({msg:'all users',status:true,donator});
+        }
+        const donator = await Donator.find({ firstname: { $regex: '^' + firstname, $options: 'i' } });
+        
+        if(donator){
+            
+            return res.status(200).json({msg:'users found',status:true, donator});
+        }
+        else{
+            return res.status(404).json({msg:'user not found',status:false});
+        }
+
+    }catch(ex){
+        next(ex);
+    }
+}

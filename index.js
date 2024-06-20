@@ -4,10 +4,7 @@ const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-require('dotenv').config();
 
-const ProjectRoutes = require('./routes/ProjectRoutes');
-const DonatorRoutes = require('./routes/DonatorRoutes');
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -16,11 +13,24 @@ app.use(cors({
 
 app.use(express.json());
 
+require('dotenv').config();
+const validateToken= require('./Controllers/validateToken');
+const ProjectRoutes = require('./routes/ProjectRoutes');
+const DonatorRoutes = require('./routes/DonatorRoutes');
+const AuthorizationRoutes = require('./routes/AuthorizationRoute');
+const AuthenticateRoute = require('./routes/AuthenticateRoute');
+
+
+
+
 app.use(bodyParser.json({limit:'10mb'}));
 app.use(bodyParser.urlencoded({limit:'10mb',extended:true}))
 
 app.use('/projects',ProjectRoutes)
 app.use('/donators', DonatorRoutes);
+app.use('/authorizationRoute',AuthorizationRoutes);
+
+app.use('/authenticateRoute',validateToken,AuthenticateRoute);
 
 
 const DB = process.env.MONGO_URL.replace('<password>',process.env.MONGO_PASSWORD);

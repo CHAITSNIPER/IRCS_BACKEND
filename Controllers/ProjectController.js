@@ -42,7 +42,7 @@ module.exports.getSelectedProjs = async(req,res,next)=>{
          const id = req.params;
     
          const project = await Projects.findById(id).select(['title','description']);
-         console.log(project,id);
+         
          if(project){
             return res.status(200).json({msg:'project retrieved',project,status:true})
          }
